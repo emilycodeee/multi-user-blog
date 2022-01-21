@@ -12,7 +12,6 @@ export default {
   setup () {
     console.log('process.env.VUE_APP_apiKey')
     console.log(process.env.VUE_APP_API_KEY)
-    console.log(process.env.VUE_APP_SOMEKEY)
   },
   components: {
 
