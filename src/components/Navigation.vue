@@ -3,7 +3,7 @@
     <nav class="container">
       <div class="branding">
         <router-link class="header" :to="{ name: 'Home' }"
-          >Multi-Author Blog
+          >EmilyD Blogs
         </router-link>
       </div>
       <div class="nav-links">
@@ -215,15 +215,18 @@ header {
       color: #fff;
     }
   }
-  .mobile-nav-enter-active,
-  .mobile-nav-leave-active {
+
+.mobile-nav-enter-active,
+.mobile-nav-leave-active {
+  /* transition: opacity .5s; */
     transition: all 1s ease;
   }
+
   .mobile-nav-enter {
     transform: translateX(-250px);
   }
   .mobile-nav-enter-to {
-    transform: translateX(0);
+    transform: translateX(0px);
   }
   .mobile-nav-leave-to {
     transform: translateX(-250px);
