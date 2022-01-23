@@ -6,7 +6,7 @@
           >EmilyD Blogs
         </router-link>
       </div>
-      <div class="nav-links">
+      <div class="nav-links"  v-show="!mobileScreen">
         <ul>
           <router-link class="link" to="#">Home</router-link>
           <router-link class="link" to="#">Blogs</router-link>
