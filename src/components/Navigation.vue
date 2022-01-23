@@ -15,9 +15,9 @@
         </ul>
       </div>
     </nav>
-
-    <transition>
-      <ul>
+    <img :src="menuIcon" class='menu-icon' v-show="mobileScreen" @click="toggleMenu" />
+    <transition name="mobile-nav">
+      <ul class="mobile-nav" v-show="mobileNav">
         <router-link class="link" to="#">Home</router-link>
         <router-link class="link" to="#">Blogs</router-link>
         <router-link class="link" to="#">Create post</router-link>
@@ -27,14 +27,41 @@
   </header>
 </template>
 
-<script>
-
+<script >
+import { ref } from 'vue'
+import menuIcon from '@/assets/Icons/bars-regular.svg'
 export default {
-  name: 'Navigation'
+  name: 'Navigation',
+  setup () {
+    const mobileScreen = ref(null)
+    const mobileNav = ref(false)
+    const windowWidth = ref(null)
+
+    const checkScreen = () => {
+      windowWidth.value = window.innerWidth
+      if (windowWidth.value < 750) {
+        mobileScreen.value = true
+      } else {
+        mobileScreen.value = false
+        mobileNav.value = false
+      }
+    }
+
+    const toggleMenu = () => {
+      mobileNav.value = !mobileNav.value
+      console.log(mobileNav.value)
+    }
+
+    window.addEventListener('resize', checkScreen)
+    checkScreen()
+
+    return { menuIcon, mobileScreen, mobileNav, toggleMenu }
+  }
 
 }
 </script>
 <style lang='scss' scoped>
+
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -155,6 +182,15 @@ header {
       margin-right: 40px;
     }
   }
+.menu-icon{
+  cursor: pointer;
+  position: absolute;
+  top: 32px;
+  right: 25px;
+  height: 25px;
+  width: auto;
+}
+
   .menu-icon {
     cursor: pointer;
     position: absolute;
