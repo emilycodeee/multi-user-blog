@@ -25,7 +25,6 @@
 </template>
 
 <script>
-// import arrow from '@/arrow-right-light.svg'
 import arrow from '@/assets/Icons/arrow-right-light.svg'
 export default {
   name: 'BlogPost',
@@ -138,19 +137,6 @@ export default {
     background-color: #303030;
     color: #fff;
   }
-}
-
-.arrow{
-  margin-left: 8px;
-  width: 12px;
-  path{
-    fill:#000
-  }
-}
-
-.arrow-light {
-  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(251deg) brightness(106%) contrast(101%);
-
 }
 
 </style>
