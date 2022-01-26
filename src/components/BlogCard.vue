@@ -1,6 +1,6 @@
 <template>
 <div class="blog-card">
-  <div class="icons">
+  <div v-show="editMode" class="icons">
     <div class="icon">
       <img class="edit" :src="editIcon" alt="edit">
     </div>
@@ -21,7 +21,8 @@
 </template>
 
 <script>
-
+import { computed, onBeforeUnmount } from 'vue'
+import { useStore } from 'vuex'
 import arrow from '@/assets/Icons/arrow-right-light.svg'
 import editIcon from '@/assets/Icons/edit-regular.svg'
 import deleteIcon from '@/assets/Icons/trash-regular.svg'
@@ -30,8 +31,13 @@ export default {
   name: 'BlogCard',
   props: ['card'],
   setup () {
+    const store = useStore()
+    const editMode = computed(() => store.state.editMode)
+
+    onBeforeUnmount(() => store.commit('toggleEditPost', false))
+
     return {
-      arrow, editIcon, deleteIcon
+      arrow, editIcon, deleteIcon, editMode
     }
   }
 }
