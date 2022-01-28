@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-<BlogPost :post='welcomeScreen'/>
+<BlogPost v-if="!user" :post='welcomeScreen'/>
 <BlogPost v-for='(post,i) in sampleBlogPost' :key='i' :post='post'/>
 <div class="blog-card-wrap">
   <div class="container">
@@ -10,7 +10,7 @@
 </div>
   </div>
 </div>
-<div class="updates">
+<div v-if="!user" class="updates">
   <div class="container">
     <h2>never miss a post. Register or your free account today!</h2>
     <router-link class="router-button" to="#">
@@ -37,8 +37,9 @@ export default {
     const sampleBlogPost = ref([{ title: 'blog1', blogHTML: 'loremloremloremlorem loremlorem', blogCoverPhotos: 'beautiful-stories' }, { title: 'blog2', blogHTML: 'loremloremloremlorem loremlorem', blogCoverPhotos: 'designed-for-everyone' }])
 
     const sampleBlogCards = computed(() => store.state.sampleBlogCards)
+    const user = computed(() => store.state.user)
 
-    return { welcomeScreen, sampleBlogPost, arrow, sampleBlogCards }
+    return { welcomeScreen, sampleBlogPost, arrow, sampleBlogCards, user }
   },
   components: {
     BlogPost, BlogCard

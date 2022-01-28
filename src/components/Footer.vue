@@ -23,9 +23,9 @@
         <div class="col-2">
           <ul>
             <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
-            <router-link class="link" :to="{ name: 'Home' }" >Blogs</router-link>
+            <router-link class="link" :to="{ name: 'Blogs' }" >Blogs</router-link>
             <router-link  class="link" :to="{ name: 'Home' }" >Create Post</router-link>
-            <router-link  class="link" :to="{ name: 'Home' }" >Login In / Register</router-link>
+            <router-link v-if="!store.state.user" class="link" :to="{ name: 'Login' }" >Login In / Register</router-link>
           </ul>
         </div>
       </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
 import github from '@/assets/Icons/github.svg'
 import web from '@/assets/Icons/web-svgrepo-com.svg'
 import resume from '@/assets/Icons/resume.svg'
@@ -44,11 +45,14 @@ import linkedin from '@/assets/Icons/linkedin-brands.svg'
 export default {
   name: 'Footer',
   setup () {
+    const store = useStore()
+
     return {
       github,
       resume,
       web,
-      linkedin
+      linkedin,
+      store
     }
   }
 

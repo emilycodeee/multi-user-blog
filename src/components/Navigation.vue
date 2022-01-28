@@ -6,22 +6,59 @@
           >EmilyD Blogs
         </router-link>
       </div>
-      <div class="nav-links"  v-show="!mobileScreen">
+      <div class="nav-links" v-show="!mobileScreen">
         <ul>
-          <router-link class="link" :to="{name:'Home'}">Home</router-link>
-          <router-link class="link" :to="{name:'Blogs'}">Blogs</router-link>
+          <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
+          <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
           <router-link class="link" to="#">Create post</router-link>
-          <router-link class="link" to="#">Login/Register</router-link>
+          <router-link v-if="!store.state.user" class="link" :to="{ name: 'Login' }">Login/Register</router-link>
         </ul>
+        <div v-if="store.state.user" class="profile" ref="profile" @click="toggleProfile">
+          <span>{{ store.state.profileInitials }}</span>
+          <div v-show="showProfile" class="profile-menu">
+            <div class="info">
+              <p class="initials">{{ store.state.profileInitials }}</p>
+              <div class="right">
+                <p>
+                  {{ store.state.profileFirstName }}
+                  {{ store.state.profileLastName }}
+                </p>
+                <p>{{ store.state.profileUserName }}</p>
+                <p>{{ store.state.profileEmail }}</p>
+              </div>
+            </div>
+            <div class="options">
+              <router-link class="option" to="#">
+                <img class="icon" :src="userIcon" alt="userIcon" />
+                <p>Profile</p>
+              </router-link>
+              <router-link class="option" to="#">
+                <img class="icon" :src="adminIcon" alt="adminIcon" />
+                <p>Profile</p>
+              </router-link>
+              <div @click="handleLogout" class="option" to="#">
+                <img class="icon" :src="signOutIcon" alt="signOutIcon" />
+                <p>Sign Out</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
-    <img :src="menuIcon" class='menu-icon' v-show="mobileScreen" @click="toggleMenu" />
+    <img
+      :src="menuIcon"
+      class="menu-icon"
+      v-show="mobileScreen"
+      @click="toggleMenu"
+    />
     <transition name="mobile-nav">
       <ul class="mobile-nav" v-show="mobileNav">
-        <router-link class="link" :to="{name:'Home'}">Home</router-link>
-        <router-link class="link" :to="{name:'Blogs'}">Blogs</router-link>
+        <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
+        <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
         <router-link class="link" to="#">Create post</router-link>
-        <router-link class="link" to="#">Login/Register</router-link>
+        <router-link v-if="!store.state.user" class="link" :to="{ name: 'Login' }"
+          >Login/Register</router-link
+        >
       </ul>
     </transition>
   </header>
@@ -29,14 +66,22 @@
 
 <script >
 import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { logOut } from '../firebase/firebase'
 import menuIcon from '@/assets/Icons/bars-regular.svg'
+import adminIcon from '@/assets/Icons/user-crown-light.svg'
+import userIcon from '@/assets/Icons/user-alt-light.svg'
+import signOutIcon from '@/assets/Icons/sign-out-alt-regular.svg'
+
 export default {
   name: 'Navigation',
   setup () {
     const mobileScreen = ref(null)
     const mobileNav = ref(false)
     const windowWidth = ref(null)
-
+    const profile = ref(null)
+    const showProfile = ref(false)
+    const store = useStore()
     const checkScreen = () => {
       windowWidth.value = window.innerWidth
       if (windowWidth.value < 750) {
@@ -49,19 +94,42 @@ export default {
 
     const toggleMenu = () => {
       mobileNav.value = !mobileNav.value
-      console.log(mobileNav.value)
+    }
+
+    const toggleProfile = (e) => {
+      console.log('ssss', e.target)
+      console.log('ssss', profile.value)
+      if (e.target === profile.value) {
+        showProfile.value = !showProfile.value
+      }
+      console.log('toggle')
+    }
+
+    const handleLogout = () => {
+      logOut()
     }
 
     window.addEventListener('resize', checkScreen)
     checkScreen()
 
-    return { menuIcon, mobileScreen, mobileNav, toggleMenu }
+    return {
+      menuIcon,
+      mobileScreen,
+      mobileNav,
+      toggleMenu,
+      store,
+      signOutIcon,
+      userIcon,
+      adminIcon,
+      toggleProfile,
+      showProfile,
+      profile,
+      handleLogout
+    }
   }
-
 }
 </script>
 <style lang='scss' scoped>
-
 header {
   background-color: #fff;
   padding: 0 25px;
@@ -182,14 +250,14 @@ header {
       margin-right: 40px;
     }
   }
-.menu-icon{
-  cursor: pointer;
-  position: absolute;
-  top: 32px;
-  right: 25px;
-  height: 25px;
-  width: auto;
-}
+  .menu-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 32px;
+    right: 25px;
+    height: 25px;
+    width: auto;
+  }
 
   .menu-icon {
     cursor: pointer;
@@ -216,9 +284,9 @@ header {
     }
   }
 
-.mobile-nav-enter-active,
-.mobile-nav-leave-active {
-  /* transition: opacity .5s; */
+  .mobile-nav-enter-active,
+  .mobile-nav-leave-active {
+    /* transition: opacity .5s; */
     transition: all 1s ease;
   }
 

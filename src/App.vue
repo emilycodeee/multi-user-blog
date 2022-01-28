@@ -2,20 +2,50 @@
 <template>
   <div class="app-wrapper">
     <div class="app">
-      <Navigation/>
-
+      <Navigation v-if="showNav"/>
       <router-view />
-      <Footer/>
+      <Footer v-if="showNav"/>
     </div>
   </div>
 </template>
 
 <script>
+import { ref, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 import Navigation from './components/Navigation.vue'
 import Footer from './components/Footer.vue'
+import { subscribeToUserStatus } from './firebase/firebase'
+import { useStore } from 'vuex'
+// import { getAuth } from 'firebase/auth'
+
 export default {
   name: 'App',
-  components: { Navigation, Footer }
+  components: { Navigation, Footer },
+  setup () {
+    const showNav = ref(null)
+    const route = useRoute()
+    const store = useStore()
+
+    subscribeToUserStatus((currentUser) => {
+      console.log(currentUser)
+      console.log('有在該乖監聽')
+      store.commit('updateCurrentUser', currentUser)
+      if (currentUser) {
+        store.dispatch('getCurrentUser')
+      }
+    })
+
+    watchEffect(() => {
+      if (route.name === 'Login' || route.name === 'Register' || route.name === 'ForgotPassword') {
+        showNav.value = false
+      } else {
+        showNav.value = true
+      }
+    })
+
+    console.log(route.name)
+    return { showNav }
+  }
 
 }
 </script>
@@ -107,6 +137,12 @@ button,
   pointer-events: none !important;
   cursor: none !important;
   background-color: rgba(128, 128, 128, 0.5) !important;
+}
+
+.error{
+  text-align: center;
+  color:red;
+  font-size: 12px;
 }
 
 .blog-card-wrap{
